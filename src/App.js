@@ -56,7 +56,7 @@ function App() {
     operation.setContext(context => ({
       headers: {
         ...context.headers,
-        Authorization: authToken,
+        Authorization: token.__raw,
       },
     }));
   };
@@ -88,8 +88,11 @@ function App() {
     credentials: "same-origin", 
   });
 
+  // For local env, use ws://localhost:8000/graphql
+  // For production, use wss://apollo.adaptivdev.net/graphql
+
   const wsLink = new WebSocketLink({
-    uri: `wss://${process.env.REACT_APP_WS_URL}`,
+    uri: `ws://localhost:8000/graphql`,
     options: {
       reconnect: true,
       connectionParams: {
@@ -97,7 +100,6 @@ function App() {
       }
     }
   });
-
 
   const link = split(
     // split based on operation type
