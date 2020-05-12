@@ -10,6 +10,7 @@ import {
   TextField
 } from "@material-ui/core";
 import CloseIcon from '@material-ui/icons/Close';
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 const useStyles = makeStyles(theme => ({
   span: {
@@ -63,10 +64,12 @@ const useStyles = makeStyles(theme => ({
     fontSize: '2rem',
     fontWeight: 'bold',
     background: '#2962FF',
+    margin: theme.spacing(1),
     color: 'white',
     '&:hover': {
       color: '#2962FF'
     }
+    
   }
 }));
   
@@ -141,7 +144,22 @@ function AnnouncementModal({ setAnnouncementOpen, setAlertOpen }) {
           <Button variant="outlined" color="primary" onClick={onSubmit} className={classes.button}>
             Send Announcement
           </Button>
+        
+          <input
+            accept="image/*"
+            className={classes.input}
+            style={{ display: 'none' }}
+            id="raised-button-file"
+            multiple
+            type="file"
+          />
+          <label htmlFor="raised-button-file">
+            <Button variant="raised" component="span" className={classes.button}>
+              Upload
+            </Button>
+          </label> 
         </div>
+        
       </div>
     </div>
   )
