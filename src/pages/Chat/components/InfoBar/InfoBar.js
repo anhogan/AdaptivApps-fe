@@ -10,17 +10,17 @@ import AnnouncementModal from './AnnouncementModal';
 import config from "../../../../config/auth_config";
 
 // Style Imports
+import {
+  makeStyles,
+  Box,
+  TextField
+} from "@material-ui/core";
 import CreateIcon from '@material-ui/icons/Create';
 import LanguageIcon from '@material-ui/icons/Language';
 import SearchIcon from '@material-ui/icons/Search';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import {
-  makeStyles,
-  Box,
-  TextField
-} from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
@@ -102,9 +102,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-// After BE update for Announcement, change chatRoom prop name, add in query for Announcement messages (or on messages?), setup a subscription for announcements
-
-function InfoBar({ user }) {
+function InfoBar({ user, setAlertOpen, setNewRoom, setDeleteRoom, setUpdateChat, setDeleteChat }) {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [announcement, setAnnouncementOpen] = useState(false);
@@ -133,7 +131,7 @@ function InfoBar({ user }) {
     if (loading) return <CircularProgress className={classes.loadingSpinner} />;
     if (error) return `Error! ${error.message}`;
 
-    const announcementRoom = data?.profile.chatRooms === undefined ? null : data?.profile.chatRooms[0];
+    const participants = data?.profile.chatRooms.map(item => item.participants).concat().flat();
 
     _subscribeToNewChatRoom(subscribeToMore);
 
@@ -143,7 +141,6 @@ function InfoBar({ user }) {
         let users = room.participants.map(user => {
           return `${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`;
         });
-
         return users.filter(user => {
           if (user.includes(searchRecipient.toLowerCase())) {
             results.push(room);
@@ -151,7 +148,6 @@ function InfoBar({ user }) {
           };
         });
       });
-
       setSearchRecipient('');
     };
 
@@ -193,7 +189,7 @@ function InfoBar({ user }) {
           BackdropProps={{
             timeout: 500,
           }}>
-          <RecipientModal user={user} setOpen={setOpen}/>
+          <RecipientModal user={user} setOpen={setOpen} setNewRoom={setNewRoom} participants={participants} />
         </Modal> 
         {user && user[config.roleUrl].includes("Admin") ? 
         (
@@ -212,17 +208,17 @@ function InfoBar({ user }) {
             BackdropProps={{
               timeout: 500,
             }}>
-            <AnnouncementModal />
+            <AnnouncementModal setAnnouncementOpen={setAnnouncementOpen} setAlertOpen={setAlertOpen} />
            </Modal>
           </>
         ) : null}
         <div className={classes.chatRoomDiv}>
-          <AnnouncementRoom chatRoom={announcementRoom} key='announcement_room' user={user} />
+          <AnnouncementRoom key='announcement_room' user={user} />
           <Divider variant="inset" className={classes.divider} />
           {results.length > 0 ? 
             (results.map((chatRoom, id) => (
               <div className={classes.chatroom}>
-                <ChatRoom chatRoom={chatRoom} key={id} user={user} />
+                <ChatRoom chatRoom={chatRoom} key={id} user={user} setDeleteRoom={setDeleteRoom} />
                 <Divider variant="inset" className={classes.divider} />
               </div>
             )))
@@ -230,7 +226,7 @@ function InfoBar({ user }) {
             (data.profile.chatRooms === undefined ? null : 
             (data && data?.profile.chatRooms?.map((chatRoom, id) => (
               <div className={classes.chatroom}>
-                <ChatRoom chatRoom={chatRoom} key={id} user={user} />
+                <ChatRoom chatRoom={chatRoom} key={id} user={user} setDeleteRoom={setDeleteRoom} />
                 <Divider variant="inset" className={classes.divider} />
               </div>
             ))))

@@ -34,8 +34,8 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
     borderRadius: '5px',
+    border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
@@ -76,7 +76,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function RecipientModal({ user, setOpen }) {
+function RecipientModal({ user, setOpen, participants, setNewRoom }) {
     const classes = useStyles();
     const [searchRecipient, setSearchRecipient] = useState("");
     const [results, setResults] = useState([]);
@@ -96,18 +96,22 @@ function RecipientModal({ user, setOpen }) {
           return results;
         }
       });
-
       setSearchRecipient('');
     };
 
+    const participantsEmail = participants.map(item => item.email)
+    const uniqueEmails = [...new Set(participantsEmail)]
+
     const newChatRoom = async (item) => {
-      await createChatRoom({
+        await (createChatRoom({
         variables:{
           useremail: user.email,
           recipientemail: item.email
         }
-      })
+      }));
+
       setOpen(false);
+      setNewRoom(true);
     };
 
     const handleChange = e => {
@@ -120,6 +124,34 @@ function RecipientModal({ user, setOpen }) {
       setOpen(false);
     };
 
+    const searchList = (
+    <List>
+    {results.length > 0 ? 
+      (results.map(item => {
+        const filtered = uniqueEmails.filter(email => email === item.email)
+        if (filtered[0] !== item.email) {
+          return (
+            <ListItem className={classes.listItem} value={`${item.firstName} ${item.lastName}`} onClick={() => newChatRoom(item)}>
+              <ListItemText primary={`${item.firstName} ${item.lastName}`} />
+            </ListItem>
+          )
+        }
+        }))
+      : 
+      (data && data?.profiles.map(item => {
+        const filtered = uniqueEmails.filter(email => email === item.email)
+        if (filtered[0] !== item.email) {
+          return (
+            <ListItem className={classes.listItem} value={`${item.firstName} ${item.lastName}`} onClick={() => newChatRoom(item)}>
+                <ListItemText primary={`${item.firstName} ${item.lastName}`} />
+              </ListItem>
+          )
+        }
+        }))}
+      </List>
+      )
+
+      
     return (
      <div>          
       <div className={classes.paper}>
@@ -145,20 +177,7 @@ function RecipientModal({ user, setOpen }) {
             <div className={classes.root}>
               <div>
               <Paper style={{maxHeight: 200, overflow: 'auto'}}>
-                <List>
-                {results.length > 0 ? 
-                  (results.map(item => (
-                    <ListItem className={classes.listItem} value={`${item.firstName} ${item.lastName}`} onClick={() => newChatRoom(item)}>
-                      <ListItemText primary={`${item.firstName} ${item.lastName}`} />
-                    </ListItem>
-                  ))) 
-                  : 
-                  (data && data?.profiles.map(item => (
-                    <ListItem className={classes.listItem} value={`${item.firstName} ${item.lastName}`} onClick={() => newChatRoom(item)}>
-                      <ListItemText primary={`${item.firstName} ${item.lastName}`} />
-                    </ListItem>
-                )))}
-                  </List>
+                {searchList}
                 </Paper>
               </div>
             </div>
