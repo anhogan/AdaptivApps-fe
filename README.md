@@ -1,6 +1,3 @@
-[![Maintainability](https://api.codeclimate.com/v1/badges/9030c05fde6af8c35028/maintainability)](https://codeclimate.com/github/Lambda-School-Labs/AdaptivApps-fe/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/9030c05fde6af8c35028/test_coverage)](https://codeclimate.com/github/Lambda-School-Labs/AdaptivApps-fe/test_coverage)
-
 # AdaptivApps
 
 You can find the deployed project at [adaptivapps](https://adaptivdev.net/).
@@ -49,9 +46,9 @@ A nonprofit organization and is looking for a better way to engage their staff, 
 
 ## Tech Stack
 
-#### [Front end](https://github.com/Lambda-School-Labs/AdaptivApps-fe)
+#### [Frontend](https://github.com/anhogan/AdaptivApps-fe)
 
-### Front end built using:
+### Frontend built using:
 
 #### _React_
 
@@ -62,10 +59,12 @@ Why did you choose this framework?
 - Fast rendering with virtual DOM
 - Testability
 
-#### Front end deployed to `AWS Amplify`
+#### Frontend deployed to `AWS Amplify`
 Setup with CI
 
-#### [Back end](https://github.com/Lambda-School-Labs/AdaptivApps-be) built using:
+### [Backend](https://github.com/anhogan/AdaptivApps-be) 
+
+### Backend built using:
 
 #### **Prismatopia (GraphQL, Apollo, Prisma)**
 
@@ -147,4 +146,4 @@ These contribution guidelines have been adapted from [this good-Contributing.md-
 
 ## Documentation
 
-See [Backend Documentation](https://github.com/Lambda-School-Labs/AdaptivApps-be) for details on the backend of our project.
+See [Backend Documentation](https://github.com/anhogan/AdaptivApps-be) for details on the backend of our project.
